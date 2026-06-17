@@ -9,6 +9,11 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
 $id = $_GET['id'];
 
+if ($id != $_SESSION['user']['id'] && !$_SESSION['user']['isAdmin']) {
+    header("location: dashboard.php");
+    exit;
+}
+
 // Gebruikersgegevens ophalen
 $stmt = $pdo->prepare("SELECT * FROM user WHERE id = ?");
 $stmt->execute([$id]);

@@ -64,7 +64,7 @@ $incomingTransactions = $stmt->fetchAll();
             <div class="bg-red-100 p-2 rounded">
                 <?php foreach ($outgoingTransactions as $transaction): ?>
                     <div class="flex justify-between mb-2">
-                        <p><?= $transaction['description'] ?></p>
+                        <p><?= htmlspecialchars($transaction['description'], ENT_QUOTES, 'UTF-8') ?></p>
                         <p>€<?= number_format($transaction['amount'], 2, ',', '.') ?></p>
                     </div>
                 <?php endforeach; ?>
@@ -80,7 +80,7 @@ $incomingTransactions = $stmt->fetchAll();
                 <div class="bg-green-100 p-2 rounded">
                     <?php foreach ($incomingTransactions as $transaction): ?>
                         <div class="flex justify-between mb-2">
-                            <p><?= $transaction['description'] ?></p>
+                            <p><?= htmlspecialchars($transaction['description'], ENT_QUOTES, 'UTF-8') ?></p>
                             <p>€<?= number_format($transaction['amount'], 2, ',', '.') ?></p>
                         </div>
                     <?php endforeach; ?>

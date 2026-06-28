@@ -7,7 +7,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
     $passwordcheck = $_POST['passwordcheck'];
 
-    if ($password == $passwordcheck) {
+    if ($password != $passwordcheck) {
+        $error = "De wachtwoorden komen niet overeen";
+    } elseif (strlen($password) < 8) {
+        // Eis een minimale wachtwoordlengte van 8 tekens
+        $error = "Het wachtwoord moet minimaal 8 tekens lang zijn";
+    } else {
         $stmt = $pdo->prepare("SELECT * FROM user WHERE username = ?");
         $stmt->execute([$username]);
         if ($stmt->rowCount() == 0) {
@@ -17,8 +22,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $error = "Deze gebruikersnaam is al in gebruik";
         }
-    } else {
-        $error = "De wachtwoorden komen niet overeen";
     }
 }
 

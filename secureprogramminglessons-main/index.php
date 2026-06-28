@@ -6,23 +6,38 @@ include 'includes/db.php';
 include 'includes/userTable.php';
 include 'includes/transactionTable.php';
 
+// Houd het aantal mislukte inlogpogingen bij in de sessie
+if(!isset($_SESSION['login_attempts'])) {
+    $_SESSION['login_attempts'] = 0;
+}
+
 //Controleer of post is geset
 if($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    $stmt = $pdo->prepare("SELECT * FROM user WHERE username = ?");
-    $stmt->execute([$username]);
-    $user = $stmt->fetch();
-
-    if($user && $user['password'] === $password) {
-        $_SESSION['loggedin'] = true;
-        $_SESSION['username'] = $username;
-        $_SESSION['user'] = $user;
-
-        header("location: dashboard.php");
+    // Blokkeer het inloggen na 5 mislukte pogingen (bescherming tegen brute-force)
+    if($_SESSION['login_attempts'] >= 5) {
+        $error = "Te veel mislukte pogingen. Probeer het later opnieuw.";
     } else {
-        $error = "Gebruikersnaam of wachtwoord is onjuist";
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+
+        $stmt = $pdo->prepare("SELECT * FROM user WHERE username = ?");
+        $stmt->execute([$username]);
+        $user = $stmt->fetch();
+
+        if($user && $user['password'] === $password) {
+            // Reset de teller na een succesvolle login
+            $_SESSION['login_attempts'] = 0;
+
+            $_SESSION['loggedin'] = true;
+            $_SESSION['username'] = $username;
+            $_SESSION['user'] = $user;
+
+            header("location: dashboard.php");
+        } else {
+            // Tel een mislukte poging op
+            $_SESSION['login_attempts']++;
+            $error = "Gebruikersnaam of wachtwoord is onjuist";
+        }
     }
 
 }

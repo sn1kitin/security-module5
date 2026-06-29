@@ -7,6 +7,12 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true){
     exit;
 }
 
+// Deze pagina is alleen voor beheerders, stuur andere gebruikers terug
+if(!isset($_SESSION['user']['isAdmin']) || $_SESSION['user']['isAdmin'] != 1){
+    header("location: dashboard.php");
+    exit;
+}
+
 // show users
 
 $stmt = $pdo->prepare("SELECT * FROM user");

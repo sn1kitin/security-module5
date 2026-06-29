@@ -15,7 +15,7 @@ if ($checkTable->rowCount() == 0) {
     // Voeg de standaardgebruikers toe
     $insertUsersQuery = "
     INSERT INTO `user` (`id`, `username`, `password`, `balance`, `isAdmin`) VALUES
-    (1, 'Admin', 'AlfaBankAdminAccount', 1000.00, 0),
+    (1, 'Admin', 'AlfaBankAdminAccount', 1000.00, 1),
     (2, 'FerryKuhlman', '12345678', 1255.36, 0),
     (5, 'Han2002', 'password', 23424.84, 0),
     (6, 'RoyBos', 'qwerty', 9.23, 0);
